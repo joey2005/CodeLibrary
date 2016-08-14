@@ -11,13 +11,11 @@ struct Complex{
     Complex(){}; 
     Complex(double _a,double _b) {a=_a;b=_b;} 
 }; 
-int L1,L2; 
-int s1[maxn],s2[maxn]; 
 int n,id; 
-int A[maxn]; 
 Complex tmp[maxn],P[maxn],PB[maxn]; 
 void fill(int s[],int L,int m,int d) { 
-    if (m==n) P[d]=Complex(s[id++],0); 
+    if (m==n)
+        P[d]=Complex(id==L?0:s[id++],0); 
     else { 
         fill(s,L,m*2,d); 
         fill(s,L,m*2,d+m); 
@@ -32,7 +30,7 @@ void fill2(int m,int d) {
     } 
 } 
 void fft(int oper) { 
-    for (int d=0;(1<<d)<n;d++) { 
+    for (int d=0;(1<<d)<n;++d) { 
         int i,m=(1<<d); 
         double p0=2*pi/double(m*2)*double(oper); 
         double sinp0=sin(p0); 
@@ -55,18 +53,16 @@ void fft(int oper) {
 } 
 void findConvolution(int s1[], int L1, int s2[], int L2, double result[]) {
     for (n=L1+L2;n!=lowbit(n);n+=lowbit(n)); 
-    for (int i = L1; i <= n; ++i) s1[i] = 0;
-    for (int i = L2; i <= n; ++i) s2[i] = 0;
     id=0; fill(s1,L1,1,0); fft(1); 
-    for (int i=0;i<n;i++) PB[i]=P[i]; 
+    for (int i = 0; i < n; ++i) PB[i]=P[i]; 
     id=0; fill(s2,L2,1,0); fft(1); 
-    for (int i=0;i<n;i++) { 
+    for (int i = 0; i < n; ++i) { 
         tmp[i].a=P[i].a*PB[i].a-P[i].b*PB[i].b; 
         tmp[i].b=P[i].a*PB[i].b+P[i].b*PB[i].a; 
     } 
     id=0; fill2(1,0); fft(-1); 
     for (int i = 0; i < n; ++i) {
-        result[i] = P[i].a/(double)n;
+        result[i]=P[i].a/(double)n;
     }
 }
 
