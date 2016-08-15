@@ -25,7 +25,6 @@ inline void pushdown(int i) {
         fa[i * 2 + 1] = fa_rev[i * 2 + 1] = cover[i * 2 + 1] = 0;
         sum[i * 2 + 1] = 0;
         fz[i] = false;
-        //return;
     }
     if (fa[i]) {
         fa[i * 2] += fa[i];
@@ -89,7 +88,6 @@ long long query(int i, int l, int r, int x, int y) {
     }
     int mid = (l + r) / 2;
     pushdown(i);
-    //cerr << "!!!" << l << ' ' << r << ' ' << x << ' ' << y << '=' << sum[i] << ' ' << sum[i * 2] << ' ' << sum[i * 2 + 1] << endl;
     long long cur = 0;
     cur += query(i * 2, l, mid, x, y);
     cur += query(i * 2 + 1, mid + 1, r, x, y);
@@ -103,12 +101,6 @@ void add(int i, int l, int r, int x, int y) {
     }
     if (x <= l && y >= r) {
         long long add = (y - x + 1) - (l - x) - len[i];
-        /*
-        if (l == 1 && r == 2 && x == 1 && y == 3) {
-            cerr << y - x + 1 << ' ' << l - x << ' ' << len[i] << endl;
-            cerr << "!!" << add << endl;
-        }
-        */
         sum[i] += cnt(len[i]);
         sum[i] += add * len[i];
         sum[i] %= md;
@@ -224,10 +216,8 @@ int main() {
                     zero(1, 1, n - 1, b, a - 1);
                 }
             }
-            //cerr << '!' << sum[1] << endl;
             cur %= md;
             ans = (ans + qq * cur) % md;
-            //cerr << cur << endl;
         }
         printf("%d\n", (int)ans);
     }
