@@ -70,10 +70,10 @@ int main() {
             events[eventCount] = events[0];
             for (int j = 0; j < eventCount; ++j) {
                 cnt += events[j].cnt; 
-                cover[cnt] += det(events[j].p, events[j + 1].p) * .5;
+                cover[cnt] += det(events[j].p, events[j + 1].p)/2;
                 double theta = events[j + 1].deg - events[j].deg;
-                if (theta < 0) theta += pi * 2.;
-                cover[cnt] += theta * cir[i].r * cir[i].r * .5 - sin(theta) * cir[i].r * cir[i].r * .5;
+                if (theta < 0) theta += 2*pi;
+                cover[cnt] += theta*sqr(cir[i].r)/2 - sin(theta)*sqr(cir[i].r)/2;
             }
         }
     }
