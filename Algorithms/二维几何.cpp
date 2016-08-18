@@ -2,16 +2,11 @@
 
 using namespace std;
 
-const double eps = 1e-8;
-const double PI = acos(-1.0);
-
-int sign(double x) {return x < -eps ? -1: x > eps; }
-int zero(double x) { return fabs(x) <= eps; }
-double sqr(double x) { return x * x; }
-double mysqrt(double x) { return x < 0 ? 0 : sqrt(x); }
+const double eps = 1e-9;
+const double pi = acos(-1.0);
 struct Point {
     double x, y;
-    Point() { x = y = 0; }
+    Point(): x(0), y(0) {}
     Point(double x, double y): x(x), y(y) {}
     Point operator +(const Point &a) const { return Point(x + a.x, y + a.y); }
     Point operator -(const Point &a) const { return Point(x - a.x, y - a.y); }
@@ -20,10 +15,14 @@ struct Point {
     double len() const { return sqrt(len2()); }
     double len2() const { return x * x + y * y; }
 };
-double det(const Point &a, const Point &b) { return a.x * b.y - a.y * b.x; }
-double dot(const Point &a, const Point &b) { return a.x * b.x + a.y * b.y; }
-double cross(const Point &a, const Point &b, const Point &c) { return det(b - a, c - a); }
-double getAngle(const Point &a) { return atan2(a.y, a.x); }
+inline int sign(double x) {return x < -eps ? -1: x > eps; }
+inline int zero(double x) { return fabs(x) <= eps; }
+inline double sqr(double x) { return x * x; }
+inline double mysqrt(double x) { return x < 0 ? 0 : sqrt(x); }
+inline double det(const Point &a, const Point &b) { return a.x * b.y - a.y * b.x; }
+inline double dot(const Point &a, const Point &b) { return a.x * b.x + a.y * b.y; }
+inline double cross(const Point &a, const Point &b, const Point &c) { return det(b - a, c - a); }
+inline double ATAN(const Point &a) { return atan2(a.y, a.x); }
 //====================点在线段上=============================================//
 bool onLine(const Point &p, const Point &a, const Point &b) {
     return zero(cross(a, b, p)) && sign(dot(a - p, b - p)) <= 0;
@@ -64,10 +63,9 @@ bool intersect(const Point &a, const Point &b, const Point &o, double r, Point &
     return true;
 }
 //====================nlogn半平面交==========================================//
-const int maxn = 20000 + 10;
+const int maxn = 100024;
 struct Plane {
-    Point a, b;
-    double arg;
+    Point a, b; double arg;
     Plane() {}
     Plane(const Point &a, const Point &b): a(a), b(b) { arg = atan2(b.y - a.y, b.x - a.x); }
 };
@@ -77,10 +75,9 @@ bool intersect(const Point &a, const Point &b, const Point &c, const Point &d, P
     cp = (d * k1 - c * k2) / (k1 - k2);
     return 1;
 }
+Point tmp_cp;
 Point intersect(const Plane &a, const Plane &b) {
-    Point cp;
-    intersect(a.a, a.b, b.a, b.b, cp);
-    return cp;
+    intersect(a.a, a.b, b.a, b.b, tmp_cp); return tmp_cp;
 }
 int satisfy(const Point &p, const Plane &pl) {
     return sign(cross(pl.a, pl.b, p)) > 0;
@@ -89,31 +86,34 @@ int check(const Plane &a, const Plane &b, const Plane &c) {
     Point cp = intersect(b, c);
     return satisfy(cp, a);
 }
+Plane que[maxn];
 double check(Plane pl[], int N) {
-    static Plane Q[maxn];
     int front = 1, back = 1;
     for (int i = 0; i < N; ++i) {
-        for (; back - front > 1 && !check(Q[back - 2], Q[back - 1], pl[i]); ) --back;
-        for (; back - front > 1 && !check(pl[i], Q[front], Q[front + 1]); ) ++front;
-        Q[back++] = pl[i];
+        for (; back - front > 1 && !check(que[back - 2], que[back - 1], pl[i]); ) --back;
+        for (; back - front > 1 && !check(pl[i], que[front], que[front + 1]); ) ++front;
+        que[back++] = pl[i];
     }
-    for (; back - front > 2 && !check(Q[back - 2], Q[back - 1], Q[front]); ) --back;
-    for (; back - front > 2 && !check(Q[back - 1], Q[front], Q[front + 1]); ) ++front;
+    for (; back - front > 2 && !check(que[back - 2], que[back - 1], que[front]); ) --back;
+    for (; back - front > 2 && !check(que[back - 1], que[front], que[front + 1]); ) ++front;
     if (back - front < 3) return 0;
     double area = 0;
-    Q[front - 1] = Q[back - 1];
-    Q[back] = Q[front];
+    que[front - 1] = que[back - 1];
+    que[back] = que[front];
     for (int i = front; i < back; ++i) {
-        area += det(intersect(Q[i - 1], Q[i]), intersect(Q[i], Q[i + 1]));
+        area += det(intersect(que[i - 1], que[i]), intersect(que[i], que[i + 1]));
     }
     return fabs(area) * .5;
 }
-bool operator < (const Plane &a, const Plane &b) {
-    int cmp = sign(a.arg - b.arg);
-    return cmp == 0 ? satisfy(a.a, b) : cmp < 0;
+inline bool lessThan(const Plane &a, const Plane &b) {
+    if (zero(a.arg - b.arg)) {
+        return satisfy(a.a, b);
+    } else {
+        return a.arg < b.arg;
+    }
 }
-bool operator == (const Plane &a, const Plane &b) {
-    return zero(getAngle(a.b - a.a) - getAngle(b.b - b.a));
+inline bool equals(const Plane &a, const Plane &b) {
+    return zero(ATAN(a.b - a.a) - ATAN(b.b - b.a));
 }
 
 int main() {

@@ -2,13 +2,12 @@
 
 using namespace std;
 
-string getSmallest(string s) {
-	int i, j, k, l;
-	int N = s.length();
-	s += s;
-	for (i = 0, j = 1; j < N; ) {
-		for (k = 0; k < N && s[i + k] == s[j + k]; k ++);
-		if (k >= N) break;
+string getSmallest(string _s) {
+	int L = _s.size(), i, j, k, l;
+    string s = _s + _s;
+	for (i = 0, j = 1; j < L; ) {
+		for (k = 0; k < L && s[i + k] == s[j + k]; k ++);
+		if (k >= L) break;
 		if (s[i + k] < s[j + k]) {
 			j += k + 1;
         } else {
@@ -17,7 +16,7 @@ string getSmallest(string s) {
 			j = max(l, j) + 1;
 		}
 	}
-	return s.substr(i, N);
+	return s.substr(i, L);
 }
 
 int main() {

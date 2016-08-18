@@ -3,8 +3,7 @@
 using namespace std;
 
 const double eps = 1e-9;
-const double PI = acos(-1.0);
-const int maxn = 1010;
+const double pi = acos(-1.0);
 struct Point {
     double x, y;
     Point() { x = y = 0; }
@@ -16,26 +15,27 @@ struct Point {
     double len() const { return sqrt(len2()); }
     double len2() const { return x * x + y * y; }
 };
+inline double sqr(double x) { return x * x; }
 inline double det(const Point &a, const Point &b) { return a.x * b.y - a.y * b.x; }
 inline int sign(double x) { return x < -eps ? -1 : x > eps; }
-inline double sqr(double x) { return x * x; }
+
+const int maxn = 1024;
 struct Circle {
-    Point o;
-    double r;
+    Point o; double r;
     Circle() {}
     Circle(const Point &o, double r): o(o), r(r) {}
-} c[maxn];
-struct Event {
-    Point p;
-    double ang;
-    int add;
-    Event() {}
-    Event(const Point &_p, double _ang, int _add): p(_p), ang(_ang), add(_add) {}
-    bool operator <(const Event &a) const { return ang < a.ang; }
-} events[maxn * 2];
-int E, cnt;
+} cir[maxn];
+inline bool overlap(const Circle &a, const Circle &b) { return (a.o - b.o).len() <= a.r - b.r + eps; }
 
-void circleCrossCircle(const Circle &a, const Circle &b) {
+struct Event {
+    Point p; double deg; int cnt;
+    Event() {}
+    Event(Point _p, double _deg, int _cnt) { p=_p; deg=_deg; cnt=_cnt; }
+    bool operator <(const Event &a) const { return deg < a.deg; }
+} events[maxn << 1];
+int eventCount, cnt;
+
+void circleIntersectCircle(const Circle &a, const Circle &b) {
     double l = (a.o - b.o).len2(), ll = (a.o - b.o).len();
     if (ll < fabs(a.r - b.r) + eps || ll > a.r + b.r - eps) return;
     double s = ((a.r - b.r) * (a.r + b.r) / l + 1) * .5;
@@ -45,42 +45,42 @@ void circleCrossCircle(const Circle &a, const Circle &b) {
     Point bb = a.o + dir * s - ndir * t;
     double A = atan2(aa.y - a.o.y, aa.x - a.o.x);
     double B = atan2(bb.y - a.o.y, bb.x - a.o.x);
-    events[E++] = Event(bb, B, 1);
-    events[E++] = Event(aa, A, -1);
+    events[eventCount++] = Event(bb, B, 1);
+    events[eventCount++] = Event(aa, A, -1);
     if (B > A) cnt++;
 }
-bool removed[maxn];
-double Area[maxn];
-int C;
-bool overlap(const Circle &a, const Circle &b) { return (a.o - b.o).len() <= a.r - b.r + eps; }
+//bool removed[maxn];
+double cover[maxn];
+int circleCount;
 
 int main() {
-    scanf("%d", &C);
-    for (int i = 0; i < C; ++i) scanf("%lf%lf%lf", &c[i].o.x, &c[i].o.y, &c[i].r);
-    for (int i = 0; i <= C; ++i) Area[i] = 0;
-    for (int i = 0; i < C; ++i) {
-        E = 0; cnt = 1;
-        for (int j = 0; j < C; ++j) if (j != i && overlap(c[j], c[i])) cnt++;
-        for (int j = 0; j < C; ++j) if (i != j) circleCrossCircle(c[i], c[j]);
+    scanf("%d", &circleCount);
+    for (int i = 0; i < circleCount; ++i) {
+        scanf("%lf%lf%lf", &cir[i].o.x, &cir[i].o.y, &cir[i].r);
+    }
+    memset(cover, 0, sizeof cover);
+    for (int i = 0; i < circleCount; ++i) {
+        eventCount = 0; cnt = 1;
+        for (int j = 0; j < circleCount; ++j) if (j != i && overlap(cir[j], cir[i])) cnt++;
+        for (int j = 0; j < circleCount; ++j) if (i != j) circleIntersectCircle(cir[i], cir[j]);
         //cnt表示覆盖次数超过cnt
-        if (E == 0) Area[cnt] += PI * c[i].r * c[i].r;
+        if (eventCount == 0) cover[cnt] += pi * cir[i].r * cir[i].r;
         else {
-            sort(events, events + E);
-            events[E] = events[0];
-            for (int j = 0; j < E; ++j) {
-                cnt += events[j].add; 
-                Area[cnt] += det(events[j].p, events[j + 1].p) * .5;
-                double theta = events[j + 1].ang - events[j].ang;
-                if (theta < 0) theta += PI * 2.;
-                Area[cnt] += theta * c[i].r * c[i].r * .5 - sin(theta) * c[i].r * c[i].r * .5;
+            sort(events, events + eventCount);
+            events[eventCount] = events[0];
+            for (int j = 0; j < eventCount; ++j) {
+                cnt += events[j].cnt; 
+                cover[cnt] += det(events[j].p, events[j + 1].p) * .5;
+                double theta = events[j + 1].deg - events[j].deg;
+                if (theta < 0) theta += pi * 2.;
+                cover[cnt] += theta * cir[i].r * cir[i].r * .5 - sin(theta) * cir[i].r * cir[i].r * .5;
             }
         }
     }
-    double cntOdd = 0, cntEven = 0;
-    for (int i = 1; i <= C; ++i) {
-        if (i & 1) cntOdd += Area[i] - Area[i + 1];
-        else cntEven += Area[i] - Area[i + 1];
+    double covers[2] = {0};
+    for (int i = 1; i <= circleCount; ++i) {
+        covers[i & 1] += cover[i] - cover[i + 1];
     }
-    printf("%.5f %.5f\n", cntOdd, cntEven);
+    printf("%.15f %.15f\n", covers[1], covers[0]);
 }
 

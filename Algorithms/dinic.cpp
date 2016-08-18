@@ -39,21 +39,18 @@ inline void checkmax(T &a, T b) {
 
 typedef long long ll;
 
-const int maxn = (int)1e5 + 10;
+const int maxn = 100024;
 const int inf = (int)1e9;
 
 struct Edge {
-    int v, flow, capa, last;
-
-    Edge(int v, int f, int c, int last): v(v), flow(f), capa(c), last(last) {}
-
+    int v, f, c, last;
     Edge() {}
+    Edge(int v, int f, int c, int last): v(v), f(f), c(c), last(last) {}
 };
 
 vector<Edge> edges;
-int dist[maxn << 1];
-int head[maxn << 1], info[maxn << 1];
-int que[maxn << 1], front, back;
+int dist[maxn], head[maxn], info[maxn];
+int que[maxn], front, back;
 int source, target, vertexCount;
 
 inline void addEdge(int a, int b, int c1, int c2 = 0) {
@@ -72,7 +69,7 @@ int dinic_bfs() {
         int u = que[front++];
         for (int i = info[u]; i >= 0; i = edges[i].last) {
             int v = edges[i].v;
-            if (dist[v] == -1 && edges[i ^ 1].flow < edges[i ^ 1].capa) {
+            if (dist[v] == -1 && edges[i ^ 1].f < edges[i ^ 1].c) {
                 que[back++] = v;
                 dist[v] = dist[u] + 1;
             }
@@ -88,12 +85,12 @@ int dinic_dfs(int u, int can) {
     int res = 0;
     for (int i = head[u]; i >= 0; i = edges[i].last) {
         int v = edges[i].v;
-        if (dist[v] + 1 == dist[u] && edges[i].flow < edges[i].capa) {
-            int w = dinic_dfs(v, min(edges[i].capa - edges[i].flow, can - res));
+        if (dist[v] + 1 == dist[u] && edges[i].f < edges[i].c) {
+            int w = dinic_dfs(v, min(edges[i].c - edges[i].f, can - res));
             if (w) {
                 head[u] = i;
-                edges[i].flow += w;
-                edges[i ^ 1].flow -= w;
+                edges[i].f += w;
+                edges[i ^ 1].f -= w;
                 res += w;
                 if (res == can) {
                     break;
@@ -230,14 +227,14 @@ int main() {
     } else {
         ::source = S;
         ::target = T;
-        edges[edges.size() - 1].flow = edges[edges.size() - 1].capa = 0;
-        edges[edges.size() - 2].flow = edges[edges.size() - 2].capa = 0;
+        edges[edges.size() - 1].f = edges[edges.size() - 1].c = 0;
+        edges[edges.size() - 2].f = edges[edges.size() - 2].c = 0;
         dinic();
         string sol(n, ' ');
         for (int i = 0; i < n; ++i) {
             int j = eid[i];
-            if (edges[j].v == Nx + y[i]) {//cerr << x[i] << ' ' << Nx + y[i] << ' ' << edges[j].flow << endl;
-                sol[i] = color[edges[j].flow != edges[j].capa];
+            if (edges[j].v == Nx + y[i]) {//cerr << x[i] << ' ' << Nx + y[i] << ' ' << edges[j].f << endl;
+                sol[i] = color[edges[j].f != edges[j].c];
             }
         }
         int cnt = count(sol.begin(), sol.end(), color[0]);

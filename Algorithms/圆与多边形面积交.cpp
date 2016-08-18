@@ -2,14 +2,9 @@
 
 using namespace std;
 
-const int maxn = 110000;
+const int maxn = 100024;
 const double eps = 1e-8;
-const double PI = acos(-1.0);
-
-int sign(double x) {return x < -eps ? -1: x > eps; }
-int zero(double x) { return fabs(x) <= eps; }
-double sqr(double x) { return x * x; }
-double mysqrt(double x) { return x < 0 ? 0 : sqrt(x); }
+const double pi = acos(-1.0);
 struct Point {
     double x, y;
     Point() { x = y = 0; }
@@ -22,6 +17,10 @@ struct Point {
     double len2() const { return x * x + y * y; }
 } info[maxn];
 
+inline int sign(double x) {return x < -eps ? -1: x > eps; }
+inline int zero(double x) { return fabs(x) <= eps; }
+inline double sqr(double x) { return x * x; }
+inline double mysqrt(double x) { return x < 0 ? 0 : sqrt(x); }
 double det(const Point &a, const Point &b) { return a.x * b.y - a.y * b.x; }
 double dot(const Point &a, const Point &b) { return a.x * b.x + a.y * b.y; }
 double cross(const Point &a, const Point &b, const Point &c) { return det(b - a, c - a); }
@@ -39,9 +38,9 @@ double area2(Point pa, Point pb, double r) {
     if (a > r) {
         S = (C/2)*r*r;
         h = a*b*sin(C)/c;
-        if (h < r && B < PI/2) S -= (acos(h/r)*r*r - h*sqrt(r*r-h*h));
+        if (h < r && B < pi/2) S -= (acos(h/r)*r*r - h*sqrt(r*r-h*h));
     } else if (b > r) {
-        theta = PI - B - asin(sin(B)/r*a);
+        theta = pi - B - asin(sin(B)/r*a);
         S = .5*a*r*sin(theta) + (C-theta)/2*r*r;
     } else {
         S = .5*sin(C)*a*b;

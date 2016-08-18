@@ -20,7 +20,7 @@ inline void checkmax(T &a, T b) {
 
 typedef long long ll;
 
-const int maxn = (int)1e5 + 10;
+const int maxn = 100024;
 
 vector<int> adj[maxn];
 vector<vector<int>> heavy_paths;
