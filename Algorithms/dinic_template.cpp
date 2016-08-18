@@ -2,32 +2,11 @@
 
 using namespace std;
 
-#define ALL(x) (x).begin(),(x).end()
-
-template<typename T>
-inline void checkmin(T &a, T b) {
-    if (b < a) {
-        a = b;
-    }
-}
-
-template<typename T>
-inline void checkmax(T &a, T b) {
-    if (b > a) {
-        a = b;
-    }
-}
-
-typedef long long ll;
-
 template<typename INT, const int V>
 struct Dinic {
     struct Edge {
-        int v, last;
-        INT f, capa;
-
+        int v, last; INT f, capa;
         Edge(int v, INT capa, int last): v(v), f(0), capa(capa), last(last) {}
-
         Edge() {}
     };
 
