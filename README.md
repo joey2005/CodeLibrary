@@ -1,1 +1,2 @@
-Some codes from sports progrmmaing contests
+this repo includes some useful codes from sports programming contests.
+

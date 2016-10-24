@@ -2,7 +2,7 @@
 
 using namespace std;
 
-template<typename INT, const int V>
+template<typename INT, const int V, const INT infty>
 struct Dinic {
     struct Edge {
         int v, last; INT f, capa;
@@ -81,7 +81,7 @@ struct Dinic {
         INT res = 0, f;
         while (bfs()) {
             memcpy(cur, info, sizeof info);
-            res += dfs(source, INT_MAX / 3);
+            res += dfs(source, infty);
         }
         return res;
     }
@@ -93,7 +93,7 @@ struct Dinic {
     int source, sink;
 };
 
-typedef Dinic<int, 1 << 18> Flow;
+typedef Dinic<int, 100010, INT_MAX / 3> Flow;
 
 int main() {
 }
