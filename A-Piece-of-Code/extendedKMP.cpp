@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void extkmp(char a[], char b[], int m, int n, int ret[]) {
+void extendedKMP(char a[], char b[], int m, int n, int ret[]) {
     int N = m + n + 1;
     vector<int> s(N + 1);
     for (int i = 0; i < m; ++i) s[i] = a[i];
