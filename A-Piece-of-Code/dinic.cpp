@@ -1,23 +1,4 @@
-#include <vector>
-#include <queue>
-#include <deque>
-#include <map>
-#include <set>
-#include <unordered_map>
-#include <unordered_set>
-#include <bitset>
-#include <iostream>
-#include <sstream>
-#include <fstream>
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-#include <climits>
-#include <cassert>
-#include <cctype>
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -242,4 +223,3 @@ int main() {
         cout << sol << endl;
     }
 }
-
