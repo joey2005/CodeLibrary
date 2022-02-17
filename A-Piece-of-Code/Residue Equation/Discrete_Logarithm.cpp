@@ -1,12 +1,12 @@
 /***
   * SGU 261
-  * Author: Joey2005
+  * Author: joey2005
   */
 #include <bits/stdc++.h>
 
 using namespace std;
 
-namespace Discrete_logarithm {
+namespace Discrete_Logarithm {
     inline long long mulmod(long long a, long long b, long long mod) { return a * b % mod; }
 
     inline long long powmod(long long a, long long n, long long mod) {
@@ -114,10 +114,9 @@ namespace Discrete_logarithm {
 int main() {
     int P, K, A;
     cin >> P >> K >> A;
-    vector<int> res = Discrete_logarithm::solve(P, K, A);
+    vector<int> res = Discrete_Logarithm::solve(P, K, A);
     cout << res.size() << endl;
     for (int result : res) {
         cout << result << endl;
     }
 }
-
