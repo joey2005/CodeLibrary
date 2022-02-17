@@ -118,4 +118,3 @@ inline bool equals(const Plane &a, const Plane &b) {
 
 int main() {
 }
-
