@@ -1,3 +1,3 @@
 # CodeLibrary
 
-## This repo contains many pieces of codes that are useful in sports programming contests.
+** This repo stores many pieces of programs that are useful in sports programming contests. **
