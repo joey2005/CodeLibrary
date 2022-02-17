@@ -222,4 +222,3 @@ int main() {
         printf("%d\n", (int)ans);
     }
 }
-
