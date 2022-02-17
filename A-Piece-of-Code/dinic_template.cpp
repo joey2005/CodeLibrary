@@ -97,4 +97,3 @@ typedef Dinic<int, 100010, INT_MAX / 3> Flow;
 
 int main() {
 }
-
