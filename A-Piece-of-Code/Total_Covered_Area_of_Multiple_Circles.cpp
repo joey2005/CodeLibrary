@@ -83,4 +83,3 @@ int main() {
     }
     printf("%.15f %.15f\n", covers[1], covers[0]);
 }
-
