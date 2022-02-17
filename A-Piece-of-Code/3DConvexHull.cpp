@@ -125,4 +125,3 @@ int main() {
         printf("%.15f %.15f\n", resSur / 2, resVol / 6);
     }
 }
-
