@@ -28,7 +28,7 @@ int n, size[maxn], dep[maxn], fa[maxn], id[maxn], pos[maxn];
 int tot, tin[maxn], tout[maxn], seq[maxn << 1];
 int front, back, que[maxn];
 
-void heavy_light_decomposition() {
+void heavy_light_paths_decomposition() {
     front = back = 0;
     que[back++] = 0;
     fa[0] = dep[0] = 0;
@@ -80,4 +80,3 @@ void dfs(int v, int u) {
 
 int main() {
 }
-
