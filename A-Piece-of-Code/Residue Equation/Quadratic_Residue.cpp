@@ -1,12 +1,12 @@
 /***
   * URAL 1132
-  * Author: Joey2005
+  * Author: joey2005
   */
 #include <bits/stdc++.h>
 
 using namespace std;
 
-namespace Quadratic_residue {
+namespace Quadratic_Residue {
     inline long long mulmod(long long a, long long b, long long mod) {
         return a * b % mod;
     }
@@ -65,7 +65,7 @@ int main() {
     for (int testNumber = 1; testNumber <= testCount; ++testNumber) {
         int a, n, ans_x, ans_y;
         cin >> a >> n;
-        if (Quadratic_residue::solve(a, n, ans_x, ans_y)) {
+        if (Quadratic_Residue::solve(a, n, ans_x, ans_y)) {
             if (ans_x > ans_y) {
                 cout << ans_y << ' ' << ans_x << endl;
             } else if (ans_x < ans_y) {
